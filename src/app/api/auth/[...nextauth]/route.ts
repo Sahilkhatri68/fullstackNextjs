@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import clientPromise from "@/lib/mongodb";
+import type { JWT } from "next-auth/jwt";
+import type { Session, User } from "next-auth";
 
 export const authOptions = {
   providers: [
@@ -39,7 +41,7 @@ export const authOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -48,9 +50,9 @@ export const authOptions = {
       return token;
     },
 
-    async session({ session, token }: any) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
-        session.user = {
+        (session.user as any) = {
           id: token.id,
           email: token.email,
           name: token.name,
