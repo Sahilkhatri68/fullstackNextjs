@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { signIn } from "next-auth/react";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,26 +14,19 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: form.email,
+      password: form.password,
+    });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.error || "Login failed.");
-        return;
-      }
-
-      toast.success("Login successful ", {
-        onClose: () => router.push("/"), // change redirect as needed
+    if (res?.error) {
+      toast.error("Invalid email or password");
+    } else {
+      toast.success("Login successful", {
+        onClose: () => router.push("/dashboard"),
         autoClose: 3000,
       });
-    } catch {
-      toast.error("Something went wrong. Please try again.");
     }
   }
 

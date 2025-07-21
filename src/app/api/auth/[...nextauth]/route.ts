@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import clientPromise from "@/lib/mongodb";
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -14,7 +14,7 @@ const handler = NextAuth({
       async authorize(credentials) {
         if (!credentials) throw new Error("Missing credentials");
         const client = await clientPromise;
-        const db = client.db();
+        const db = client.db("stockmarketDatabase");
         const user = await db.collection("users").findOne({ email: credentials.email });
 
         if (!user) throw new Error("User not found");
@@ -24,18 +24,45 @@ const handler = NextAuth({
         return {
           id: user._id.toString(),
           email: user.email,
-          name: user.name,
+          name: user.name || "User",
         };
       },
     }),
   ],
+
   pages: {
     signIn: "/login",
   },
+
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
   },
+
+  callbacks: {
+    async jwt({ token, user }: any) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
+
+    async session({ session, token }: any) {
+      if (token) {
+        session.user = {
+          id: token.id,
+          email: token.email,
+          name: token.name,
+        };
+      }
+      return session;
+    },
+  },
+
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
