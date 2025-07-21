@@ -1,21 +1,23 @@
-// src/lib/mongodb.ts
-
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
-const options = {};
-
-if (!uri) {
-  throw new Error("Please define the MONGODB_URI environment variable in .env.local");
-}
+const uri = process.env.MONGODB_URI!;
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  tls: true,
+  // tlsAllowInvalidCertificates: false, // Keep false for production; uncomment to debug SSL issues only
+};
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
-// Add the custom property to NodeJS.Global (needed for TypeScript)
 declare global {
-  // eslint-disable-next-line no-var
+  // To prevent multiple connections in development
   var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
+
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please define the MONGODB_URI environment variable in .env.local");
 }
 
 if (process.env.NODE_ENV === "development") {
