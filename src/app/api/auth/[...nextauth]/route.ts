@@ -52,6 +52,7 @@ export const authOptions = {
 
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (session.user as any) = {
           id: token.id,
           email: token.email,
@@ -59,7 +60,9 @@ export const authOptions = {
         };
       }
       return session;
-    },
+    }
+
+
   },
 
   secret: process.env.NEXTAUTH_SECRET,
