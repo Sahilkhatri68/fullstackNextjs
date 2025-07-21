@@ -1,10 +1,13 @@
+// File: src/app/api/test-db/route.ts
+
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const client = await clientPromise;
-    const db = client.db("test"); // You can change 'test' to your actual db name
+    const db = client.db("stockmarketDatabase");
+// Optional: change this to your actual DB name
 
     const collections = await db.listCollections().toArray();
 
