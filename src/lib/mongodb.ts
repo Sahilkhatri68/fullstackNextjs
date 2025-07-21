@@ -2,8 +2,6 @@ import { MongoClient } from "mongodb";
 
 const uri = process.env.MONGODB_URI!;
 const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   tls: true,
   // tlsAllowInvalidCertificates: false, // Keep false for production; uncomment to debug SSL issues only
 };

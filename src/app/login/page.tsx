@@ -98,6 +98,13 @@ export default function LoginPage() {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
+            <button
+              type="button"
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              className="w-full bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700 transition-colors mt-4"
+            >
+              Sign in with Google
+            </button>
             
           </form>
 

@@ -5,6 +5,9 @@ import clientPromise from "@/lib/mongodb";
 import type { JWT } from "next-auth/jwt";
 import type { Session, User } from "next-auth";
 
+console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
