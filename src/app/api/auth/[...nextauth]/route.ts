@@ -1,11 +1,12 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import clientPromise from "@/lib/mongodb";
 import type { JWT } from "next-auth/jwt";
 import type { Session, User } from "next-auth";
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -29,6 +30,10 @@ const authOptions = {
           name: user.name || "User",
         };
       },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
 
@@ -56,7 +61,6 @@ const authOptions = {
 
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (session.user as any) = {
           id: token.id,
           email: token.email,
@@ -73,4 +77,3 @@ const authOptions = {
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
-// Removed invalid session.maxAge assignment

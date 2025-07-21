@@ -25,11 +25,15 @@ export default function LoginPage() {
     setLoading(false);
 
     if (res?.error) {
-      toast.error("Invalid email or password");
+      toast.error("Invalid email or password", {
+        autoClose: 1500,
+        transition: Bounce,
+      });
     } else {
       toast.success("Login successful", {
         onClose: () => router.push("/dashboard"),
-        autoClose: 3000,
+        autoClose: 1500,
+        transition: Bounce,
       });
     }
   }
@@ -38,7 +42,7 @@ export default function LoginPage() {
     <>
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={1500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}
@@ -94,12 +98,24 @@ export default function LoginPage() {
             >
               {loading ? "Logging in..." : "Login"}
             </button>
+            <button
+              type="button"
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              className="w-full bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700 transition-colors mt-4"
+            >
+              Sign in with Google
+            </button>
           </form>
 
           <p className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">
               Register
+            </Link>
+          </p>
+          <p className="mt-2 text-center text-sm">
+            <Link href="/forgot-password" className="text-blue-600 hover:underline">
+              Forgot your password?
             </Link>
           </p>
         </div>
