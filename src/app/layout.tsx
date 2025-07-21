@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <NavbarSidebar />
         </header>
         <main className="p-6 flex-1">{children}</main>
-        <footer className="bg-white p-4 text-center text-sm border-t fixed bottom-0 left-0 w-full z-50">
+        <footer className="mt-auto bg-white p-4 text-center text-sm border-t">
           &copy; 2025 MERN Full-Stack Tutorial
         </footer>
       </body>
