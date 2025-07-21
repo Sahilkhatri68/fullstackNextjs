@@ -40,6 +40,10 @@ const authOptions = {
     strategy: "jwt" as const,
   },
 
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days in seconds
+  },
+
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
@@ -69,3 +73,4 @@ const authOptions = {
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
+// Removed invalid session.maxAge assignment
