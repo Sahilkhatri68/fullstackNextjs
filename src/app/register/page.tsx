@@ -33,7 +33,8 @@ export default function RegisterPage() {
         autoClose: 3000,
       });
     } catch (err) {
-      toast.error("Something went wrong. Please try again.");
+      console.error(err);
+      toast.error("Something went wrong.");
     }
   }
 
