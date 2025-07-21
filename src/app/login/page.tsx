@@ -10,15 +10,19 @@ import "react-toastify/dist/ReactToastify.css";
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
 
     const res = await signIn("credentials", {
       redirect: false,
       email: form.email,
       password: form.password,
     });
+
+    setLoading(false);
 
     if (res?.error) {
       toast.error("Invalid email or password");
@@ -83,14 +87,17 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition-colors"
+              disabled={loading}
+              className={`w-full py-2 rounded font-semibold transition-colors ${
+                loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
           <p className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">
               Register
             </Link>
