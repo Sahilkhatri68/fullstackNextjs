@@ -31,7 +31,8 @@ export async function POST(req: Request) {
   });
 
   // Send real email with Resend
-  const resetUrl = `http://localhost:3000/reset/${token}`;
+  // const resetUrl = `http://localhost:3000/reset/${token}`;           //for local testing
+  const resetUrl = `https://fullstack-nextjs-zeta-ochre.vercel.app/reset/${token}`;  //for deployment
   await resend.emails.send({
     from: "Stock Market<onboarding@resend.dev>",
     to: email,
