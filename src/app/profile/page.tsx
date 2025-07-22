@@ -16,7 +16,7 @@ export default function ProfilePage() {
   if (status === "loading") return <div className="text-center mt-10">Loading...</div>;
   if (status === "unauthenticated") return null;
 
-  const user = session?.user;
+  const user = session?.user as { name?: string; email?: string; image?: string; role?: string };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
@@ -27,8 +27,8 @@ export default function ProfilePage() {
         )}
         <div className="text-lg font-semibold">{user?.name || user?.email}</div>
         <div className="text-gray-600">{user?.email}</div>
-        {(user && (user as any).role) && (
-          <span className="mt-1 inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">{(user as any).role}</span>
+        {user?.role && (
+          <span className="mt-1 inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">{user.role}</span>
         )}
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}

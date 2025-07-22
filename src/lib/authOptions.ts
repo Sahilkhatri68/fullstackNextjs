@@ -27,7 +27,7 @@ export const authOptions = {
           id: user._id.toString(),
           email: user.email,
           name: user.name || "User",
-          role: (user as any).role || "user", // Include role
+          role: (user as { role?: string }).role || "user", // Include role
         };
       },
     }),
@@ -74,14 +74,14 @@ export const authOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.role = (user as any).role || token.role || "user";
+        token.role = (user as { role?: string }).role || token.role || "user";
       }
       return token;
     },
 
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
-        (session.user as Record<string, unknown>) = {
+        (session.user as typeof token) = {
           id: token.id,
           email: token.email,
           name: token.name,
