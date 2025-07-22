@@ -40,6 +40,7 @@ export async function POST(req: Request) {
       name,
       email,
       password: hashedPassword,
+      role: "user", // Default role
       createdAt: new Date(),
     });
 

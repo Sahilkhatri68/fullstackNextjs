@@ -1,23 +1,24 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/login", label: "Login" },
-  { href: "/register", label: "Register" },
 ];
 
 export default function NavbarSidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
   return (
     <nav className="relative">
       {/* Top Navbar */}
       <div className="flex items-center justify-between px-6 py-4 bg-white shadow-md sticky top-0 z-30">
         <div className="text-xl font-bold tracking-tight">Stock Market</div>
-        <div className="hidden md:flex gap-6">
+        <div className="hidden md:flex gap-6 items-center">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -27,6 +28,17 @@ export default function NavbarSidebar() {
               {link.label}
             </Link>
           ))}
+          {isLoggedIn && (
+            <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Dashboard</Link>
+          )}
+          {!isLoggedIn ? (
+            <>
+              <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Login</Link>
+              <Link href="/register" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Register</Link>
+            </>
+          ) : (
+            <Link href="/profile" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Profile</Link>
+          )}
         </div>
         {/* Hamburger for mobile */}
         <button
@@ -73,6 +85,17 @@ export default function NavbarSidebar() {
               {link.label}
             </Link>
           ))}
+          {isLoggedIn && (
+            <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium text-lg transition-colors" onClick={() => setSidebarOpen(false)}>Dashboard</Link>
+          )}
+          {!isLoggedIn ? (
+            <>
+              <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium text-lg transition-colors" onClick={() => setSidebarOpen(false)}>Login</Link>
+              <Link href="/register" className="text-gray-700 hover:text-blue-600 font-medium text-lg transition-colors" onClick={() => setSidebarOpen(false)}>Register</Link>
+            </>
+          ) : (
+            <Link href="/profile" className="text-gray-700 hover:text-blue-600 font-medium text-lg transition-colors" onClick={() => setSidebarOpen(false)}>Profile</Link>
+          )}
         </nav>
       </aside>
     </nav>

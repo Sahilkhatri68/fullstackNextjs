@@ -11,6 +11,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -100,10 +101,30 @@ export default function LoginPage() {
             </button>
             <button
               type="button"
-              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-              className="w-full bg-red-600 text-white py-2 rounded font-semibold hover:bg-red-700 transition-colors mt-4"
+              onClick={async () => {
+                setGoogleLoading(true);
+                await signIn("google", { callbackUrl: "/dashboard" });
+                setGoogleLoading(false);
+              }}
+              disabled={googleLoading}
+              className={`w-full flex items-center justify-center gap-2 border border-gray-300 bg-white text-gray-700 py-2 rounded font-semibold shadow-sm hover:bg-gray-50 transition-colors mt-4 relative ${googleLoading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
-              Sign in with Google
+              <span className="flex items-center">
+                {/* Inline Google G SVG icon */}
+                <svg className="w-5 h-5 mr-2" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <g>
+                    <path fill="#4285F4" d="M24 9.5c3.54 0 6.71 1.22 9.19 3.23l6.85-6.85C36.68 2.09 30.74 0 24 0 14.82 0 6.73 5.08 2.69 12.44l7.99 6.2C13.01 13.16 18.13 9.5 24 9.5z"/>
+                    <path fill="#34A853" d="M46.1 24.55c0-1.64-.15-3.22-.42-4.74H24v9.01h12.42c-.54 2.9-2.18 5.36-4.65 7.01l7.19 5.59C43.98 37.13 46.1 31.36 46.1 24.55z"/>
+                    <path fill="#FBBC05" d="M10.68 28.64A14.5 14.5 0 0 1 9.5 24c0-1.62.28-3.19.78-4.64l-7.99-6.2A23.97 23.97 0 0 0 0 24c0 3.77.9 7.34 2.49 10.48l8.19-5.84z"/>
+                    <path fill="#EA4335" d="M24 48c6.48 0 11.92-2.15 15.89-5.85l-7.19-5.59c-2.01 1.35-4.59 2.15-8.7 2.15-5.87 0-10.99-3.66-13.32-8.86l-8.19 5.84C6.73 42.92 14.82 48 24 48z"/>
+                    <path fill="none" d="M0 0h48v48H0z"/>
+                  </g>
+                </svg>
+                {googleLoading ? (
+                  <span className="ml-2 animate-spin h-5 w-5 border-2 border-gray-300 border-t-blue-500 rounded-full inline-block align-middle"></span>
+                ) : null}
+                <span className="ml-2">Sign in with Google</span>
+              </span>
             </button>
             
           </form>
