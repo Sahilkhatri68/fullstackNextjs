@@ -140,6 +140,11 @@ function UserRoleManager() {
 
   useEffect(() => {
     fetchUsers();
+    
+    // Polling for real-time updates every 30 seconds
+    const interval = setInterval(fetchUsers, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const handleRoleChange = async (userId: string, newRole: string, userEmail: string) => {
@@ -151,6 +156,7 @@ function UserRoleManager() {
     });
     if (res.ok) {
       toast.success(`Role updated to "${newRole}" for ${userEmail}`);
+      toast.info("Email notification sent to user");
       fetchUsers();
     } else {
       toast.error("Failed to update role.");
@@ -217,6 +223,7 @@ function UserRoleManager() {
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -224,15 +231,39 @@ export default function DashboardPage() {
     }
   }, [status, router]);
 
+  // Polling for role changes every 30 seconds
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      const checkRole = async () => {
+        try {
+          const res = await fetch("/api/user/role");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.role !== (session?.user as any)?.role) {
+              // Role changed, refresh the page
+              window.location.reload();
+            }
+          }
+        } catch (error) {
+          console.error("Error checking role:", error);
+        }
+      };
+
+      const interval = setInterval(checkRole, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [status, session]);
+
   if (status === "loading") return <p>Loading...</p>;
   if (status === "unauthenticated") return null;
 
   const user = session?.user;
+  const isAdmin = (session?.user as any)?.role === "admin";
 
   return (
     <div className="max-w-5xl mx-auto mt-10 p-4">
       <ToastContainer position="top-right" autoClose={2000} />
-      <UserRoleManager />
+      {isAdmin && <UserRoleManager />}
       <div className="flex flex-col md:flex-row gap-8 mb-10">
         <div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl shadow-lg p-6 flex flex-col items-center">
           <div className="w-24 h-24 rounded-full bg-blue-200 flex items-center justify-center mb-4">

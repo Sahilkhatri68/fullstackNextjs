@@ -1,9 +1,13 @@
 import { randomBytes } from "crypto";
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import sgMail from "@sendgrid/mail";
 
-const resend = new Resend("re_NmuTZDKW_DffLE7dAebqdBNPq3mxWNyvU");
+// Configure SendGrid
+const sendgridApiKey = process.env.SENDGRID_API_KEY;
+if (sendgridApiKey) {
+  sgMail.setApiKey(sendgridApiKey);
+}
 
 export async function POST(req: Request) {
   const { email } = await req.json();
@@ -30,15 +34,112 @@ export async function POST(req: Request) {
     expires,
   });
 
-  // Send real email with Resend
-  // const resetUrl = `http://localhost:3000/reset/${token}`;           //for local testing
-  const resetUrl = `https://fullstack-nextjs-zeta-ochre.vercel.app/reset/${token}`;  //for deployment
-  await resend.emails.send({
-    from: "Stock Market<onboarding@resend.dev>",
-    to: email,
-    subject: "Password Reset",
-    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link will expire in 1 hour.</p>`,
-  });
+  // Environment-based URL configuration
+  const isDevelopment = process.env.NODE_ENV === "development";
+  
+  // Manual override - uncomment the line you want to use
+  // const baseUrl = "http://localhost:3000"; // For local testing
+  const baseUrl = "https://fullstack-nextjs-zeta-ochre.vercel.app"; // For production
+  
+  // Automatic environment detection (default)
+  // const baseUrl = isDevelopment 
+  //   ? "http://localhost:3000" 
+  //   : "https://fullstack-nextjs-zeta-ochre.vercel.app";
+  
+  const resetUrl = `${baseUrl}/reset/${token}`;
+  
+  console.log("Generated token:", token.substring(0, 10) + "...");
+  console.log("Reset URL:", resetUrl);
+  
+  // Send email with SendGrid using default sender (works immediately)
+  console.log("Sending email to:", email);
+  const startTime = Date.now();
+  
+  try {
+    const msg = {
+      to: email,
+      from: {
+        email: "sahilkhatriss01@gmail.com",
+        name: "Stock Market App"
+      },
+      replyTo: "sahilkhatriss01@gmail.com",
+      subject: "Password Reset - Stock Market App",
+      text: `Hello,\n\nYou requested a password reset for your Stock Market App account.\n\nClick this link to reset your password: ${resetUrl}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this password reset, please ignore this email.\n\nBest regards,\nStock Market App Team`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Password Reset - Stock Market App</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #2563eb; margin: 0; font-size: 24px;">Stock Market App</h1>
+                <p style="color: #6b7280; margin: 10px 0 0 0;">Password Reset Request</p>
+              </div>
+              
+              <p style="color: #374151; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
+                Hello,
+              </p>
+              
+              <p style="color: #374151; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
+                You requested a password reset for your Stock Market App account. Please click the button below to reset your password.
+              </p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${resetUrl}" 
+                   style="background-color: #2563eb; color: white; padding: 16px 32px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold; font-size: 16px;">
+                  Reset My Password
+                </a>
+              </div>
+              
+              <div style="background-color: #f3f4f6; padding: 20px; border-radius: 6px; margin: 25px 0;">
+                <p style="color: #6b7280; font-size: 14px; margin: 0;">
+                  <strong>Important:</strong> This password reset link will expire in 1 hour for security reasons.
+                </p>
+              </div>
+              
+              <p style="color: #374151; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
+                If the button above doesn't work, copy and paste this link into your browser:
+              </p>
+              
+              <p style="color: #6b7280; font-size: 14px; word-break: break-all; background-color: #f9fafb; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                ${resetUrl}
+              </p>
+              
+              <p style="color: #374151; line-height: 1.6; margin-bottom: 20px; font-size: 16px;">
+                If you didn't request this password reset, please ignore this email. Your password will remain unchanged.
+              </p>
+              
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+              
+              <div style="text-align: center; color: #9ca3af; font-size: 12px;">
+                <p style="margin: 0 0 10px 0;">
+                  This is an automated security message from Stock Market App.
+                </p>
+                <p style="margin: 0;">
+                  Please do not reply to this email. For support, contact our team.
+                </p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      categories: ['password-reset', 'security']
+    };
+    
+    await sgMail.send(msg);
+    const endTime = Date.now();
+    console.log(`Email sent instantly for: ${email}`);
+    console.log(`Email delivery time: ${endTime - startTime}ms`);
+  } catch (error) {
+    console.error("Email sending failed:", error);
+    return NextResponse.json({ error: "Failed to send email." }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 } 
