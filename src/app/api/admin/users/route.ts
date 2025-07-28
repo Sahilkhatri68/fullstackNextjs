@@ -26,16 +26,23 @@ export async function GET() {
   return NextResponse.json({ users });
 }
 
-export async function PATCH(req: Request) {
+export async function PATCH(request: Request) {
   const session = await getServerSession(authOptions);
-  type UserWithRole = { role?: string; name?: string; email?: string };
+  type UserWithRole = { role?: string; name?: string; email?: string; id?: string };
   if (!session || (session.user && (session.user as UserWithRole).role !== "admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
-  const { userId, newRole } = await req.json();
+  const { userId, newRole } = await request.json();
   if (!userId || !["user", "admin"].includes(newRole)) {
     return NextResponse.json({ error: "Invalid data" }, { status: 400 });
   }
+  
+  // Prevent admin from updating their own role
+  const currentUserId = (session.user as UserWithRole).id;
+  if (currentUserId === userId) {
+    return NextResponse.json({ error: "Admins cannot update their own role" }, { status: 400 });
+  }
+  
   const client = await clientPromise;
   const db = client.db("stockmarketDatabase");
   const user = await db.collection("users").findOne({ _id: new ObjectId(userId) });

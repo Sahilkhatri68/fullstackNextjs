@@ -12,7 +12,7 @@ const navLinks = [
 export default function NavbarSidebar() {
   // State management for navigation and authentication
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const isLoggedIn = status === "authenticated";
 
   return (

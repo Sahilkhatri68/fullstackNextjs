@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   });
 
   // TODO: Replace with actual email sending logic
-  console.log(`Reset link: http://localhost:3000/reset/${token}`);
+  console.log(`Reset link: https://fullstack-nextjs-zeta-ochre.vercel.app/reset/${token}`);
 
   return NextResponse.json({ message: "If this email exists, a reset link has been sent." });
 }

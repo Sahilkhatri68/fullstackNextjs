@@ -116,6 +116,7 @@ const newStockLineOptions = {
 };
 
 function UserRoleManager() {
+  const { data: session } = useSession();
   // User interface for role management system
   interface User {
     _id: string;
@@ -160,7 +161,8 @@ function UserRoleManager() {
       toast.info("Email notification sent to user");
       fetchUsers();
     } else {
-      toast.error("Failed to update role.");
+      const errorData = await res.json();
+      toast.error(errorData.error || "Failed to update role.");
     }
     setUpdatingId(null);
   };
@@ -181,39 +183,48 @@ function UserRoleManager() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user._id} className="border-b">
-                <td className="py-2 px-3">{user.email}</td>
-                <td className="py-2 px-3">{user.name}</td>
-                <td className="py-2 px-3 capitalize">{user.role}</td>
-                <td className="py-2 px-3">
-                  {user.role !== "admin" && (
-                    <button
-                      className={`px-2 py-1 bg-blue-500 text-white rounded mr-2 transition-colors duration-200 hover:bg-blue-700 flex items-center justify-center ${updatingId === user._id ? "opacity-70 cursor-not-allowed" : ""}`}
-                      onClick={() => handleRoleChange(user._id, "admin", user.email)}
-                      disabled={updatingId === user._id}
-                    >
-                      {updatingId === user._id ? (
-                        <span className="w-4 h-4 border-2 border-white border-t-blue-500 rounded-full animate-spin mr-2"></span>
-                      ) : null}
-                      Promote to Admin
-                    </button>
-                  )}
-                  {user.role !== "user" && (
-                    <button
-                      className={`px-2 py-1 bg-gray-500 text-white rounded transition-colors duration-200 hover:bg-gray-700 flex items-center justify-center ${updatingId === user._id ? "opacity-70 cursor-not-allowed" : ""}`}
-                      onClick={() => handleRoleChange(user._id, "user", user.email)}
-                      disabled={updatingId === user._id}
-                    >
-                      {updatingId === user._id ? (
-                        <span className="w-4 h-4 border-2 border-white border-t-blue-500 rounded-full animate-spin mr-2"></span>
-                      ) : null}
-                      Demote to User
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {users.map((user) => {
+              const isCurrentUser = user._id === (session?.user as any)?.id;
+              return (
+                <tr key={user._id} className={`border-b ${isCurrentUser ? 'bg-blue-50' : ''}`}>
+                  <td className="py-2 px-3">{user.email}</td>
+                  <td className="py-2 px-3">{user.name}</td>
+                  <td className="py-2 px-3 capitalize">
+                    {user.role}
+                    {isCurrentUser && <span className="ml-2 text-xs text-blue-600">(You)</span>}
+                  </td>
+                  <td className="py-2 px-3">
+                    {!isCurrentUser && user.role !== "admin" && (
+                      <button
+                        className={`px-2 py-1 bg-blue-500 text-white rounded mr-2 transition-colors duration-200 hover:bg-blue-700 flex items-center justify-center ${updatingId === user._id ? "opacity-70 cursor-not-allowed" : ""}`}
+                        onClick={() => handleRoleChange(user._id, "admin", user.email)}
+                        disabled={updatingId === user._id}
+                      >
+                        {updatingId === user._id ? (
+                          <span className="w-4 h-4 border-2 border-white border-t-blue-500 rounded-full animate-spin mr-2"></span>
+                        ) : null}
+                        Promote to Admin
+                      </button>
+                    )}
+                    {!isCurrentUser && user.role !== "user" && (
+                      <button
+                        className={`px-2 py-1 bg-gray-500 text-white rounded transition-colors duration-200 hover:bg-gray-700 flex items-center justify-center ${updatingId === user._id ? "opacity-70 cursor-not-allowed" : ""}`}
+                        onClick={() => handleRoleChange(user._id, "user", user.email)}
+                        disabled={updatingId === user._id}
+                      >
+                        {updatingId === user._id ? (
+                          <span className="w-4 h-4 border-2 border-white border-t-blue-500 rounded-full animate-spin mr-2"></span>
+                        ) : null}
+                        Demote to User
+                      </button>
+                    )}
+                    {isCurrentUser && (
+                      <span className="text-gray-500 text-sm italic">Cannot modify own role</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}

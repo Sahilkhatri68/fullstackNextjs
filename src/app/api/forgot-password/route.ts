@@ -35,8 +35,8 @@ export async function POST(req: Request) {
   });
 
       // Manual override - uncomment the line you want to use
-    // const baseUrl = "http://localhost:3000"; // For local testing
-    const baseUrl = "https://fullstack-nextjs-zeta-ochre.vercel.app"; // For production
+// const baseUrl = "http://localhost:3000"; // For local testing
+const baseUrl = "https://fullstack-nextjs-zeta-ochre.vercel.app"; // For production
   
   const resetUrl = `${baseUrl}/reset/${token}`;
   
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   
   try {
     const msg = {
-      to: email,
+    to: email,
       from: {
         email: "sahilkhatriss01@gmail.com",
         name: "Stock Market App"
