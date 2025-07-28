@@ -223,7 +223,6 @@ function UserRoleManager() {
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -239,7 +238,7 @@ export default function DashboardPage() {
           const res = await fetch("/api/user/role");
           if (res.ok) {
             const data = await res.json();
-            if (data.role !== (session?.user as any)?.role) {
+            if (data.role !== (session?.user as { role?: string })?.role) {
               // Role changed, refresh the page
               window.location.reload();
             }
@@ -258,7 +257,7 @@ export default function DashboardPage() {
   if (status === "unauthenticated") return null;
 
   const user = session?.user;
-  const isAdmin = (session?.user as any)?.role === "admin";
+  const isAdmin = (session?.user as { role?: string })?.role === "admin";
 
   return (
     <div className="max-w-5xl mx-auto mt-10 p-4">

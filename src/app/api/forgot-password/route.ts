@@ -34,17 +34,9 @@ export async function POST(req: Request) {
     expires,
   });
 
-  // Environment-based URL configuration
-  const isDevelopment = process.env.NODE_ENV === "development";
-  
-  // Manual override - uncomment the line you want to use
-  // const baseUrl = "http://localhost:3000"; // For local testing
-  const baseUrl = "https://fullstack-nextjs-zeta-ochre.vercel.app"; // For production
-  
-  // Automatic environment detection (default)
-  // const baseUrl = isDevelopment 
-  //   ? "http://localhost:3000" 
-  //   : "https://fullstack-nextjs-zeta-ochre.vercel.app";
+      // Manual override - uncomment the line you want to use
+    // const baseUrl = "http://localhost:3000"; // For local testing
+    const baseUrl = "https://fullstack-nextjs-zeta-ochre.vercel.app"; // For production
   
   const resetUrl = `${baseUrl}/reset/${token}`;
   

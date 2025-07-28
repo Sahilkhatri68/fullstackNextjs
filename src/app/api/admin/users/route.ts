@@ -11,7 +11,7 @@ if (sendgridApiKey) {
   sgMail.setApiKey(sendgridApiKey);
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   const session = await getServerSession(authOptions);
   type UserWithRole = { role?: string };
   if (!session || (session.user && (session.user as UserWithRole).role !== "admin")) {
