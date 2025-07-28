@@ -1,4 +1,4 @@
-//API route handler for login
+// API route handler for user login
 
 import { compare } from "bcryptjs";
 import { NextResponse } from "next/server";

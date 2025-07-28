@@ -116,6 +116,7 @@ const newStockLineOptions = {
 };
 
 function UserRoleManager() {
+  // User interface for role management system
   interface User {
     _id: string;
     email: string;
@@ -221,6 +222,7 @@ function UserRoleManager() {
 }
 
 export default function DashboardPage() {
+  // Session and navigation setup for dashboard
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -239,7 +241,7 @@ export default function DashboardPage() {
           if (res.ok) {
             const data = await res.json();
             if (data.role !== (session?.user as { role?: string })?.role) {
-              // Role changed, refresh the page
+              // Role changed, refresh the page to show updated permissions
               window.location.reload();
             }
           }

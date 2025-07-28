@@ -24,6 +24,7 @@ ChartJS.register(
   LineElement
 );
 
+// Sample stock data for demonstration purposes
 const fakeStockData = [
   { symbol: "AAPL", price: 192.32, change: "+1.2%", volume: 1200000 },
   { symbol: "GOOGL", price: 2845.12, change: "-0.5%", volume: 950000 },

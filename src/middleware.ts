@@ -1,5 +1,6 @@
 import { withAuth } from "next-auth/middleware";
 
+// Middleware for protecting admin routes
 export default withAuth({
   callbacks: {
     authorized: ({ token }) => {

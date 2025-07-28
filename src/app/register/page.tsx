@@ -8,6 +8,7 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisterPage() {
+  // State management for registration form
   const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 

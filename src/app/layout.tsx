@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import NavbarSidebar from "../components/NavbarSidebar";
 import ClientLayout from "./client-layout";
 
+// Application metadata configuration
 export const metadata = {
   title: "MERN Full-Stack App",
   description: "A production-grade web application using Next.js 15",

@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 
+// MongoDB connection configuration
 const uri = process.env.MONGODB_URI!;
 const options = {
   tls: true,

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 
+// Sidebar navigation links for authenticated users
 const navLinks = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/stocks", label: "Stocks" },

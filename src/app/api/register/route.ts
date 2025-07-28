@@ -1,4 +1,4 @@
-//API route handler for registration
+// API route handler for user registration
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";

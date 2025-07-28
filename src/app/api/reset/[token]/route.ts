@@ -1,4 +1,4 @@
-// src/app/api/reset/[token]/route.ts
+// src/app/api/reset/[token]/route.ts - Password reset token validation
 
 import { ObjectId } from "mongodb";
 import { hash } from "bcryptjs";

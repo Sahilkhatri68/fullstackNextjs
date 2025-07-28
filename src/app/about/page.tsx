@@ -1,4 +1,5 @@
 export default function AboutPage() {
+  // About page component with project information
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
       <h1 className="text-3xl font-bold mb-6 text-blue-800 text-center">About This Project</h1>

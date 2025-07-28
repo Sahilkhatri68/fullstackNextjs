@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 import { ObjectId } from "mongodb";
 
-// Configure SendGrid
+// Configure SendGrid for role update notifications
 const sendgridApiKey = process.env.SENDGRID_API_KEY;
 if (sendgridApiKey) {
   sgMail.setApiKey(sendgridApiKey);

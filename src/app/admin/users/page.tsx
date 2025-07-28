@@ -9,6 +9,7 @@ interface User {
 }
 
 export default function AdminUserPage() {
+  // State management for admin user management
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
   const [notification, setNotification] = useState("");

@@ -3,7 +3,7 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 
-// Configure SendGrid
+// Configure SendGrid for email delivery
 const sendgridApiKey = process.env.SENDGRID_API_KEY;
 if (sendgridApiKey) {
   sgMail.setApiKey(sendgridApiKey);

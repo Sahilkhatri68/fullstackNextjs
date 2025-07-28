@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ProfilePage() {
+  // Session and navigation management for profile page
   const { data: session, status } = useSession();
   const router = useRouter();
 

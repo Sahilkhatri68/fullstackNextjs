@@ -6,6 +6,7 @@ import { toast, ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function ResetPasswordPage({ params }: { params: Promise<{ token: string }> }) {
+  // State management for password reset form
   const { token } = use(params);
   const [password, setPassword] = useState("");
   const [success, setSuccess] = useState(false);

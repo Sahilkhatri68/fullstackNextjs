@@ -1,4 +1,4 @@
-// File: src/app/api/test-db/route.ts
+// Database connection test API route
 
 import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";

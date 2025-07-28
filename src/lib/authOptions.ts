@@ -5,6 +5,8 @@ import clientPromise from "@/lib/mongodb";
 import type { JWT } from "next-auth/jwt";
 import type { Session, User, Account } from "next-auth";
 
+// Authentication configuration for NextAuth.js
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
