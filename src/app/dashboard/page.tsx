@@ -5,116 +5,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
-import { Bar, Line, Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  PointElement,
-  LineElement,
-  ArcElement,
-} from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  PointElement,
-  LineElement,
-  ArcElement
-);
-
-const earningsHistory = [
-  { month: "Jan", earnings: 1200 },
-  { month: "Feb", earnings: 950 },
-  { month: "Mar", earnings: 1800 },
-  { month: "Apr", earnings: 2100 },
-  { month: "May", earnings: 1600 },
-  { month: "Jun", earnings: 2300 },
-];
-
-const predictionData = [
-  { symbol: "AAPL", prediction: "+5.2%" },
-  { symbol: "GOOGL", prediction: "+2.8%" },
-  { symbol: "AMZN", prediction: "-1.1%" },
-  { symbol: "TSLA", prediction: "+3.7%" },
-  { symbol: "MSFT", prediction: "+0.9%" },
-];
-
-const newStocks = [
-  { symbol: "NVDA", price: 950.12, change: "+2.3%" },
-  { symbol: "NFLX", price: 420.55, change: "-0.7%" },
-  { symbol: "META", price: 310.22, change: "+1.5%" },
-];
-
-const earningsBarData = {
-  labels: earningsHistory.map((e) => e.month),
-  datasets: [
-    {
-      label: "Earnings ($)",
-      data: earningsHistory.map((e) => e.earnings),
-      backgroundColor: "#6366f1",
-      borderRadius: 8,
-    },
-  ],
-};
-
-const earningsBarOptions = {
-  responsive: true,
-  plugins: {
-    legend: { display: false },
-    title: { display: true, text: "Past 6 Months Earnings", font: { size: 18 } },
-  },
-};
-
-const predictionDoughnutData = {
-  labels: predictionData.map((p) => p.symbol),
-  datasets: [
-    {
-      label: "Prediction %",
-      data: predictionData.map((p) => parseFloat(p.prediction)),
-      backgroundColor: ["#10b981", "#3b82f6", "#f59e42", "#ef4444", "#6366f1"],
-    },
-  ],
-};
-
-const predictionDoughnutOptions = {
-  plugins: {
-    legend: { position: 'bottom' as const },
-    title: { display: true, text: "Stock Predictions (Next Month)", font: { size: 18 } },
-  },
-};
-
-const newStockLineData = {
-  labels: newStocks.map((s) => s.symbol),
-  datasets: [
-    {
-      label: "Price ($)",
-      data: newStocks.map((s) => s.price),
-      borderColor: "#f59e42",
-      backgroundColor: "rgba(245,158,66,0.1)",
-      tension: 0.4,
-      fill: true,
-      pointRadius: 6,
-      pointBackgroundColor: "#f59e42",
-    },
-  ],
-};
-
-const newStockLineOptions = {
-  responsive: true,
-  plugins: {
-    legend: { display: false },
-    title: { display: true, text: "New Stock Prices", font: { size: 18 } },
-  },
-};
+import StockPredictor from "@/components/StockPredictor";
 
 function UserRoleManager() {
   const { data: session } = useSession();
@@ -289,29 +180,20 @@ export default function DashboardPage() {
           <div className="text-xl font-bold text-blue-800">{user?.name || user?.email}</div>
           <div className="text-gray-600">{user?.email}</div>
         </div>
-        <div className="flex-1 bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-          <Bar data={earningsBarData} options={earningsBarOptions} />
+        <div className="flex-1 bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl shadow-lg p-6 flex flex-col items-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div className="text-xl font-bold text-green-800">Stock Predictor</div>
+          <div className="text-gray-600 text-center">Powered by Brain.js Neural Network</div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-          <Doughnut data={predictionDoughnutData} options={predictionDoughnutOptions} />
-        </div>
-        <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-          <Line data={newStockLineData} options={newStockLineOptions} />
-        </div>
-      </div>
-      <div className="bg-gradient-to-br from-indigo-50 to-blue-100 rounded-xl shadow-lg p-6 mt-8">
-        <h2 className="text-xl font-semibold mb-4 text-indigo-700">New Stocks</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {newStocks.map((stock) => (
-            <div key={stock.symbol} className="border rounded-lg p-4 flex flex-col items-center bg-white">
-              <span className="text-2xl font-bold text-indigo-800">{stock.symbol}</span>
-              <span className="text-lg mt-2">${stock.price.toLocaleString()}</span>
-              <span className={`mt-1 text-sm font-semibold ${stock.change.startsWith("+") ? "text-green-600" : "text-red-600"}`}>{stock.change}</span>
-            </div>
-          ))}
-        </div>
+      
+      {/* AI Stock Predictor */}
+      <div className="mt-8">
+        <StockPredictor />
       </div>
     </div>
   );
