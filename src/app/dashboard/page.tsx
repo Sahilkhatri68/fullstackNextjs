@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 import { Bar, Line, Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -184,7 +185,7 @@ function UserRoleManager() {
           </thead>
           <tbody>
             {users.map((user) => {
-              const isCurrentUser = user._id === (session?.user as any)?.id;
+              const isCurrentUser = user._id === (session?.user as { id?: string })?.id;
               return (
                 <tr key={user._id} className={`border-b ${isCurrentUser ? 'bg-blue-50' : ''}`}>
                   <td className="py-2 px-3">{user.email}</td>
@@ -280,7 +281,7 @@ export default function DashboardPage() {
         <div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl shadow-lg p-6 flex flex-col items-center">
           <div className="w-24 h-24 rounded-full bg-blue-200 flex items-center justify-center mb-4">
             {user?.image ? (
-              <img src={user.image} alt="Profile" className="w-24 h-24 rounded-full object-cover" />
+              <Image src={user.image} alt="Profile" width={96} height={96} className="w-24 h-24 rounded-full object-cover" />
             ) : (
               <span className="text-4xl font-bold text-blue-700">{user?.name?.[0] || user?.email?.[0]}</span>
             )}

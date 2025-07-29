@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 
 export default function ProfilePage() {
   // Session and navigation management for profile page
@@ -72,9 +73,11 @@ export default function ProfilePage() {
             <div className="relative z-10">
               <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                 {user?.image ? (
-                  <img 
+                  <Image 
                     src={user.image} 
                     alt="Profile" 
+                    width={80}
+                    height={80}
                     className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg" 
                   />
                 ) : (

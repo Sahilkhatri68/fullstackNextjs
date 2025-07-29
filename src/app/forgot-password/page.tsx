@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div className="text-left">
-                  <p className="text-blue-800 text-sm font-medium mb-1">What's next?</p>
+                  <p className="text-blue-800 text-sm font-medium mb-1">What&apos;s next?</p>
                   <p className="text-blue-700 text-xs">
                     Click the link in your email to reset your password. The link will expire in 1 hour.
                   </p>
@@ -112,7 +112,7 @@ export default function ForgotPasswordPage() {
                 </svg>
               </div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Forgot Password?</h2>
-              <p className="text-gray-600 text-sm">Enter your email address and we'll send you a link to reset your password.</p>
+              <p className="text-gray-600 text-sm">Enter your email address and we&apos;ll send you a link to reset your password.</p>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -188,7 +188,7 @@ export default function ForgotPasswordPage() {
                 <div className="text-left">
                   <p className="text-gray-700 text-sm font-medium mb-1">Need help?</p>
                   <p className="text-gray-600 text-xs">
-                    If you don't receive an email within a few minutes, check your spam folder or contact support.
+                    If you don&apos;t receive an email within a few minutes, check your spam folder or contact support.
                   </p>
                 </div>
               </div>
