@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import * as brain from 'brain.js';
 import { Line, Bar } from 'react-chartjs-2';
 import {
@@ -85,52 +85,20 @@ export default function StockPredictor() {
     { symbol: 'NFLX', name: 'Netflix Inc.' }
   ];
 
-  // Generate more realistic synthetic historical data for training
-  const generateHistoricalData = (basePrice: number, days: number = 90) => {
-    const data = [];
-    let currentPrice = basePrice;
-    let trend = 0; // Cumulative trend
-    
-    for (let i = 0; i < days; i++) {
-      // More sophisticated price movement simulation
-      const volatility = 0.02; // 2% base volatility
-      const momentum = trend * 0.1; // Momentum effect
-      const randomFactor = (Math.random() - 0.5) * 2; // Random factor
-      const marketCycle = Math.sin(i / 30) * 0.01; // Market cycle effect
-      
-      // Calculate price change
-      const change = volatility * (randomFactor + momentum + marketCycle);
-      currentPrice = Math.max(currentPrice * (1 + change), basePrice * 0.5); // Prevent going too low
-      trend += change; // Update cumulative trend
-      
-      // Generate correlated volume data
-      const volumeBase = 1000000;
-      const volumeVolatility = Math.abs(change) * 5000000; // Higher volume on bigger moves
-      const volume = Math.max(volumeBase + (Math.random() - 0.5) * volumeVolatility, 100000);
-      
-      // Generate realistic market cap and P/E
-      const marketCap = currentPrice * (Math.random() * 5000000 + 1000000);
-      const pe = Math.max(5, Math.min(100, 15 + (Math.random() - 0.5) * 30)); // Realistic P/E range
-      const dividend = Math.max(0, Math.random() * 8); // Dividend yield
-      
-      data.push({
-        price: currentPrice,
-        volume: volume,
-        marketCap: marketCap,
-        pe: pe,
-        dividend: dividend,
-        dayOfWeek: i % 7,
-        month: (i % 365) % 12,
-        trend: trend,
-        volatility: Math.abs(change)
-      });
-    }
-    
-    return data;
-  };
+  // Generate more realistic synthetic historical data for training (removed unused function)
 
   // Train the neural network with enhanced features
-  const trainModel = (historicalData: any[]) => {
+  const trainModel = (historicalData: Array<{
+    price: number;
+    volume: number;
+    marketCap: number;
+    pe: number;
+    dividend: number;
+    dayOfWeek: number;
+    month: number;
+    trend: number;
+    volatility: number;
+  }>) => {
     const net = new brain.NeuralNetwork();
 
     // Prepare training data with more features

@@ -111,7 +111,7 @@ export default function DataLoader({ onDataLoaded, symbol }: DataLoaderProps) {
           for (let i = 1; i < lines.length; i++) {
             if (lines[i].trim()) {
               const values = lines[i].split(',').map(v => v.trim());
-              const row: any = {};
+              const row: Record<string, string> = {};
               headers.forEach((header, index) => {
                 row[header] = values[index];
               });
@@ -136,8 +136,8 @@ export default function DataLoader({ onDataLoaded, symbol }: DataLoaderProps) {
               price: parseFloat(item.price || item.Price || item.PRICE || item.close || item.Close || item.CLOSE),
               volume: parseInt(item.volume || item.Volume || item.VOLUME),
               open: parseFloat(item.open || item.Open || item.OPEN),
-              high: parseFloat(item.high || row.High || row.HIGH),
-              low: parseFloat(item.low || row.Low || row.LOW),
+              high: parseFloat(item.high || item.High || item.HIGH),
+              low: parseFloat(item.low || item.Low || item.LOW),
               close: parseFloat(item.close || item.Close || item.CLOSE)
             }));
           }
@@ -148,11 +148,11 @@ export default function DataLoader({ onDataLoaded, symbol }: DataLoaderProps) {
         } else {
           setError('File must contain at least 50 data points');
         }
-      } catch (error) {
-        setError('Error parsing file. Please check the format.');
-      } finally {
-        setIsLoading(false);
-      }
+          } catch {
+      setError('Error parsing file. Please check the format.');
+    } finally {
+      setIsLoading(false);
+    }
     };
 
     reader.readAsText(file);
@@ -177,7 +177,7 @@ export default function DataLoader({ onDataLoaded, symbol }: DataLoaderProps) {
       // Simulate API call with sample data
       await new Promise(resolve => setTimeout(resolve, 1500));
       onDataLoaded(sampleData);
-    } catch (error) {
+    } catch {
       setError('Failed to load data from API');
     } finally {
       setIsLoading(false);
